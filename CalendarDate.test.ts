@@ -153,10 +153,9 @@ Deno.test("fromString()", async (t) => {
   }
 });
 
-Deno.test("parseTemplateLiteral() can be used to create a date string literal", () => {
-  const CustomDateLiteral = CalendarDate.parseTemplateLiteral;
+Deno.test("D can be used to create a date string literal", () => {
   const month = "01";
-  const obj = CustomDateLiteral`${2000 + 16}-${month}-31`;
+  const obj = D`${2000 + 16}-${month}-31`;
   assertEquals(obj.year, 2016);
   assertEquals(obj.toString(), "2016-01-31");
 });
@@ -458,7 +457,7 @@ Deno.test("formatting dates - gives error with non-UTC formatter", () => {
   assertThrows(
     () => D`2023-08-01`.format(pacificTime),
     Error,
-    "For CalendarDates, Intl.DateTimeFormat must be using UTC timezone.",
+    "DateTimeFormat must use UTC timezone.",
   );
 });
 

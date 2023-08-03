@@ -1,4 +1,6 @@
-const MONTHS = Object.freeze({
+const freeze = Object.freeze;
+
+const MONTHS = freeze({
   JAN: 1,
   FEB: 2,
   MAR: 3,
@@ -13,7 +15,7 @@ const MONTHS = Object.freeze({
   DEC: 12,
 });
 
-const DAYS = Object.freeze({
+const DAYS = freeze({
   MON: 0,
   TUE: 1,
   WED: 2,
@@ -23,8 +25,8 @@ const DAYS = Object.freeze({
   SUN: 6,
 });
 
-const MONTH_SUMS_NORMAL_YEAR = Object.freeze([
-  undefined as unknown as number, // we use 1-indexed months, so there's no entry at the zero index.
+const MONTH_SUMS_NORMAL_YEAR = freeze([
+  NaN, // we use 1-indexed months, so there's no entry at the zero index.
   0,
   31,
   59,
@@ -39,8 +41,8 @@ const MONTH_SUMS_NORMAL_YEAR = Object.freeze([
   334,
 ]);
 
-const MONTH_SUMS_LEAP_YEAR = Object.freeze([
-  undefined as unknown as number, // we use 1-indexed months, so there's no entry at the zero index.
+const MONTH_SUMS_LEAP_YEAR = freeze([
+  NaN, // we use 1-indexed months, so there's no entry at the zero index.
   0,
   31,
   60,
@@ -55,26 +57,10 @@ const MONTH_SUMS_LEAP_YEAR = Object.freeze([
   335,
 ]);
 
-/** Character code of the letter A, used for the cached strings below */
-const MONTHS_CHAR_OFFSET = "A".charCodeAt(0) - 1;
-
-// The following maps convert from day of the year (e.g. 0 for Jan. 1) to month ('A' = Jan, 'B' = Feb, ...)
-// These maps are precomputed to make the date class more efficient.
-const NORMAL_YEAR =
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" +
-  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" +
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" +
-  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL";
-const LEAP_YEAR =
-  "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" +
-  "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" +
-  "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" +
-  "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL";
-
-const DAYS_PER_MONTH = Object.freeze([
-  undefined, // we use 1-indexed months, so there's no entry at the zero index.
+const DAYS_PER_MONTH = freeze([
+  NaN, // we use 1-indexed months, so there's no entry at the zero index.
   /* Jan */ 31,
-  undefined,
+  NaN,
   /* Mar */ 31,
   /* Apr */ 30,
   /* May */ 31,
@@ -87,6 +73,24 @@ const DAYS_PER_MONTH = Object.freeze([
   /* Dec */ 31,
 ]);
 
+/** Character code of the letter A, used for the cached strings below */
+const MONTHS_CHAR_OFFSET = "A".charCodeAt(0) - 1;
+
+// The following maps convert from day of the year (e.g. 0 for Jan. 1) to month ('A' = Jan, 'B' = Feb, ...)
+// These maps are precomputed to make the date class more efficient.
+// const NORMAL_YEAR =
+//   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" +
+//   "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" +
+//   "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIIIIIIIIIIII" +
+//   "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL";
+// Instead of hard-coding as seen above, we construct these in the following way to improve minification size.
+const pre = "A".repeat(31) + "B".repeat(28);
+const end = "CDEFGHIJKL".split("").map((x, i) =>
+  x.repeat(DAYS_PER_MONTH[i + 3])
+).join("");
+const NORMAL_YEAR = pre + end;
+const LEAP_YEAR = pre + "B" + end;
+
 /**
  * Internal helper method.
  * Given a year, month, and day triplet, return
@@ -97,17 +101,8 @@ const DAYS_PER_MONTH = Object.freeze([
  * @param {number} day - Day (1-31)
  */
 function tripletToDaysValue(year: number, month: number, day: number): number {
-  if (!Number.isInteger(year)) {
-    throw new Error(`Invalid year value: not an integer.`);
-  }
-  if (!Number.isInteger(month)) {
-    throw new Error(`Invalid month value: not an integer: ${month}`);
-  }
-  if (!Number.isInteger(day)) {
-    throw new Error(`Invalid day value: not an integer.`);
-  }
   if (day <= 0 || day > CalendarDate.daysInMonth(year, month)) { // daysInMonth verifies the year/month range.
-    throw new Error(`Invalid date argument: day is out of range.`);
+    throw new Error(`Day out of range.`);
   }
   let daysValue = (year * 365) + ((year + 3) / 4 | 0) -
     ((year + 99) / 100 | 0) + ((year + 399) / 400 | 0);
@@ -122,7 +117,7 @@ function tripletToDaysValue(year: number, month: number, day: number): number {
 /**
  * A calendar date, using the Gregorian calendar. Does not have any time component.
  */
-export class CalendarDate {
+class CalendarDate {
   /** The internal date value (days since 0000-01-01) */
   readonly #value: number;
 
@@ -141,39 +136,28 @@ export class CalendarDate {
    * @param {string} str - An ISO 8601 date string
    */
   public static fromString(str: string): CalendarDate {
-    const year = parseInt(str.substring(0, 4), 10);
+    /** Helper to get an int from a substring of a string, defaulting to two digits long. */
+    const extractInt = (someString: string, start: number, end?: number) =>
+      parseInt(someString.substring(start, end ?? start + 2), 10);
+    const year = extractInt(str, 0, 4);
     let month = NaN;
     let day = NaN;
     if (str.length === 10 && str.charAt(4) === "-" && str.charAt(7) === "-") {
       // YYYY-MM-DD format, presumably:
-      month = parseInt(str.substring(5, 7), 10);
-      day = parseInt(str.substring(8, 10), 10);
+      month = extractInt(str, 5);
+      day = extractInt(str, 8);
     } else if (
       str.length === 8 && String(parseInt(str, 10)).padStart(8, "0") === str
     ) {
       // YYYYMMDD format, presumably.
       // (Note we check 'String(parseInt(str, 10)).padStart(8, "0") === str' to avoid matching things like '05/05/05')
-      month = parseInt(str.substring(4, 6), 10);
-      day = parseInt(str.substring(6, 8), 10);
+      month = extractInt(str, 4);
+      day = extractInt(str, 6);
     }
     if (isNaN(year) || isNaN(month) || isNaN(day)) {
       throw new Error("Date string not in YYYY-MM-DD or YYYYMMDD format");
     }
     return new CalendarDate(tripletToDaysValue(year, month, day));
-  }
-
-  /**
-   * Parse a template string literal.
-   * e.g. const D = CalendarDate.parseTemplateLiteral; const date1 = D`2016-01-01`;
-   *
-   * @param {Object} strings Well-formed template call site object
-   * @param {...*} keys - substitution values
-   */
-  public static parseTemplateLiteral(
-    strings: TemplateStringsArray,
-    ...keys: unknown[]
-  ): CalendarDate {
-    return CalendarDate.fromString(String.raw(strings, ...keys));
   }
 
   /**
@@ -200,6 +184,8 @@ export class CalendarDate {
       daysValue > 3652424 // 1096100 is Dec. 31, 9999
     ) {
       throw new Error(`Date value (${daysValue}) out of range.`);
+    } else if (!Number.isInteger(daysValue)) {
+      throw new Error(`Non-integer date value.`);
     }
     this.#value = daysValue;
   }
@@ -277,12 +263,6 @@ export class CalendarDate {
    * @param {number} month - Month (1-12)
    */
   public static daysInMonth(year: number, month: number): number {
-    if (
-      !(year >= 1 && year <= 9999) ||
-      !(month >= MONTHS.JAN && month <= MONTHS.DEC)
-    ) {
-      throw new Error(`Invalid year or month value. (${year}-${month})`);
-    }
     if (month === MONTHS.FEB) {
       return CalendarDate.isLeapYear(year) ? 29 : 28;
     }
@@ -323,9 +303,7 @@ export class CalendarDate {
   public static fromDate(d: Date): CalendarDate {
     const isoString = d.toISOString();
     if (!isoString.endsWith("00:00:00.000Z")) {
-      throw new Error(
-        `Do not use non-UTC Date() instances for calendar dates (${isoString})`,
-      );
+      throw new Error(`Non-UTC Date. Use UTC for calendar dates.`);
     }
     return new CalendarDate(
       tripletToDaysValue(
@@ -365,9 +343,7 @@ export class CalendarDate {
 
   public format(formatter: Intl.DateTimeFormat): string {
     if (formatter.resolvedOptions().timeZone !== "UTC") {
-      throw new Error(
-        "For CalendarDates, Intl.DateTimeFormat must be using UTC timezone.",
-      );
+      throw new Error("DateTimeFormat must use UTC timezone.");
     }
     return formatter.format(this.toEpochMs()); // This is _slightly_ faster than using formatter .format(this.toDate())
   }
@@ -402,5 +378,18 @@ export class CalendarDate {
   }
 }
 
-/** Convenience method for writing calendar dates */
-export const D = CalendarDate.parseTemplateLiteral;
+/**
+ * Parse a template string literal as an ISO 8601 calendar date.
+ * e.g. const date = D`2016-01-01`;
+ *
+ * @param {Object} strings Well-formed template call site object
+ * @param {...*} keys - substitution values
+ */
+const D = (
+  strings: TemplateStringsArray,
+  ...keys: unknown[]
+): CalendarDate => {
+  return CalendarDate.fromString(String.raw(strings, ...keys));
+};
+
+export { CalendarDate, D };
