@@ -1,6 +1,7 @@
 // deno-fmt-ignore-file
 import { CalendarDate } from "./CalendarDate.ts";
 import { CalendarDate as NpmCalendarDate } from "npm:calendar-date";
+import dayjs from "npm:dayjs";
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,14 @@ Deno.bench("Combined features - NPM calendar-date", { group: "combined" }, () =>
     const d2 = d1.addDays(1);
     if (d1.toString() !== initialDateStr) throw new Error("toString() failed.");
     if (d2.toString() !== plusOneDateStr) throw new Error("Adding a day failed.");
+    if (d2.isBefore(d1)) throw new Error("Comparison test failed.");
+});
+
+Deno.bench("Combined features - Day.js", { group: "combined" }, () => {
+    const d1 = dayjs(initialDateStr);
+    const d2 = d1.add(1, "day");
+    if (d1.toISOString().substring(0, 10) !== initialDateStr) throw new Error("toString() failed.");
+    if (d2.toISOString().substring(0, 10) !== plusOneDateStr) throw new Error("Adding a day failed.");
     if (d2.isBefore(d1)) throw new Error("Comparison test failed.");
 });
 
@@ -74,6 +83,12 @@ Deno.bench("Parse - NPM calendar-date", { group: "parse" }, () => {
     }
 });
 
+Deno.bench("Parse - Day.js", { group: "parse" }, () => {
+    for (const str of stringsToParse) {
+        dayjs(str);
+    }
+});
+
 Deno.bench("Parse - Native Date object", { group: "parse" }, () => {
     for (const str of stringsToParse) {
         new Date(Date.parse(str));
@@ -103,10 +118,19 @@ Deno.bench("Iterate through a year - NPM calendar-date", { group: "iterate" }, (
     if (d.toString() !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
 });
 
+Deno.bench("Iterate through a year - Day.js", { group: "iterate" }, () => {
+    let d = dayjs(`${year}-01-01`);
+    for (let i = 0; i < 365; i++) {
+        d.toISOString().substring(0, 10);
+        d = d.add(1, "day");
+    }
+    if (d.toISOString().substring(0, 10) !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
+});
+
 Deno.bench("Iterate through a year - native JS date", { group: "iterate" }, () => {
     const d = new Date(Date.UTC(year, 0, 1));
     for (let i = 0; i < 365; i++) {
-        d.toString();
+        d.toISOString().substring(0, 10);
         d.setUTCDate(d.getUTCDate() + 1);
     }
     if (d.toISOString().substring(0, 10) !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);

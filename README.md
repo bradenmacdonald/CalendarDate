@@ -34,7 +34,7 @@ constructed using local time but printed using UTC.
 
 The benefits of using `CalendarDate` are:
 
-- It allow you to be explicit in your API design (in your TypeScript types)
+- It allows you to be explicit in your API design (in your TypeScript types)
   about whether you're using a calendar date or a timestamp.
 - It lets you avoid all kinds of subtle bugs related to timezones and daylight
   savings time (this is the voice of experience talking!).
@@ -98,36 +98,39 @@ details. You can run these benchmarks using
 ### Combined features
 
 This test uses `fromString()` to construct a calendar date, then `addDays()` to
-construct a second date, then uses `toString()` to print both dates in ISO8601
+construct a second date, then uses `toString()` to print both dates in ISO 8601
 format.
 
-| Implementation                                                        | Results (smaller is better) |
-| --------------------------------------------------------------------- | --------------------------- |
-| `CalendarDate` (this)                                                 | 0.34 µs/iter                |
-| [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date) | 1.86 µs/iter (5x slower)    |
-| JS native `Date` object                                               | 1.37 µs/iter (4x slower)    |
+On this test, `CalendarDate` is:
+
+- **5x faster** than the native `Date` object
+- **7x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **17x faster** than [Day.js](https://day.js.org/)
 
 ### Parsing
 
 This test parses 16 ISO 8601 date strings, as you might do when consuming a JSON
 API response.
 
-| Implementation                                                        | Results (smaller is better)    |
-| --------------------------------------------------------------------- | ------------------------------ |
-| `CalendarDate` (this)                                                 | 2.04 µs/iter                   |
-| [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date) | 8.91 µs/iter (4x slower)       |
-| JS native `Date` object                                               | 1.83 µs/iter (slightly faster) |
+On this test, `CalendarDate` is:
+
+- Slightly (1.13x) slower than the native `Date` object
+- **4x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **4x faster** than [Day.js](https://day.js.org/)
 
 ### Iterate throught a year
 
 This test starts with a January 1 date then iterates through every date in the
 year, converting each date to an ISO 8601 string.
 
-| Implementation                                                        | Results (smaller is better) |
-| --------------------------------------------------------------------- | --------------------------- |
-| `CalendarDate` (this)                                                 | 24.32 µs/iter               |
-| [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date) | 465.96 µs/iter (19x slower) |
-| JS native `Date` object                                               | 271.31 µs/iter (11x slower) |
+On this test, `CalendarDate` is:
+
+- **8x faster** than the native `Date` object
+- **18x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **32x faster** than [Day.js](https://day.js.org/)
 
 ## FAQ
 

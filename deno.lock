@@ -13,11 +13,16 @@
   },
   "npm": {
     "specifiers": {
-      "calendar-date": "calendar-date@2.2.0"
+      "calendar-date": "calendar-date@2.2.0",
+      "dayjs": "dayjs@1.11.9"
     },
     "packages": {
       "calendar-date@2.2.0": {
         "integrity": "sha512-19bwKdpjEbFlZdvk8uyGZEH40WJ8QkXbtLv9a4bfrH+qWUm7KIXoVSc4V7Fw+mVlJxepePg9DQ1etHCO1wGh0g==",
+        "dependencies": {}
+      },
+      "dayjs@1.11.9": {
+        "integrity": "sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==",
         "dependencies": {}
       }
     }
