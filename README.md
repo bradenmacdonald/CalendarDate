@@ -10,6 +10,9 @@ calendar in use at the time.
 Dates are internally represented as a single `Number` for performance and memory
 efficiency.
 
+This is a tiny single-file library with no dependencies and is about 3.3 kB
+when minified.
+
 ## Why do you want this?
 
 A **calendar date** like "August 5, 2023" is a very different thing from a
@@ -48,7 +51,7 @@ The benefits of using `CalendarDate` are:
 Instantiation:
 
 ```typescript
-import { CalendarDate, D } from "./CalendarDate.ts";
+import { CalendarDate, D } from "https://deno.land/x/calendar_date_deno@v1.0.0/CalendarDate.ts";
 
 // You can construct CalendarDate instances using the included D literal helper:
 const someDate = D`2023-08-15`;
