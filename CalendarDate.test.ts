@@ -333,12 +333,6 @@ Deno.test("toEpochMs", () => {
   assertEquals(D`1969-12-31`.toEpochMs(), -86400 * 1000);
 });
 
-Deno.test("toEpochSeconds", () => {
-  assertEquals(D`1970-01-01`.toEpochSeconds(), 0);
-  assertEquals(D`1970-01-02`.toEpochSeconds(), 86400);
-  assertEquals(D`1969-12-31`.toEpochSeconds(), -86400);
-});
-
 Deno.test("toDate()", async (t) => {
   for (
     const dateStr of [

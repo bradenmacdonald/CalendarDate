@@ -213,6 +213,7 @@ class CalendarDate {
     }
     return optimizedDaysInMonth(month);
   }
+
   /**
    * Is 'year' a leap year? Can be an absolute year (e.g. 2016) or relative to the year 2000 (e.g. 16) or relative to the "year 0" (1 BCE).
    * @param {number} year - The year in question
@@ -229,11 +230,6 @@ class CalendarDate {
   /** Get the number of milliseconds since the Unix epoch (Jan 1, 1970 UTC) */
   public toEpochMs(): number {
     return (this.#value - 719528) * 86400_000; // 719528 is the unix epoch, CalendarDate.fromString("1970-01-01").value
-  }
-
-  /** Get the number of seconds since the Unix epoch (Jan 1, 1970 UTC) */
-  public toEpochSeconds(): number {
-    return (this.#value - 719528) * 86400; // 719528 is the unix epoch, CalendarDate.fromString("1970-01-01").value
   }
 
   public static fromDate(d: Date): CalendarDate {
