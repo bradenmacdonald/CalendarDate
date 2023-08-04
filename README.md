@@ -41,8 +41,8 @@ The benefits of using `CalendarDate` are:
   about whether you're using a calendar date or a timestamp.
 - It lets you avoid all kinds of subtle bugs related to timezones and daylight
   savings time (this is the voice of experience talking!).
-- This implementation is very optimized and is typically 3-10x faster than using
-  the native `Date` class. It represents all dates as a single `Number` so it is
+- This implementation is very optimized and is typically 6-9x faster than using
+  the native `Date` class. It represents each date as a single `Number` so it is
   also very memory efficient.
 - Unlike `Date`, it is immutable, which makes your code more predictable.
 
@@ -106,10 +106,10 @@ format.
 
 On this test, `CalendarDate` is:
 
-- **5x faster** than the native `Date` object
-- **7x faster** than
+- **6x faster** than the native `Date` object
+- **8x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **17x faster** than [Day.js](https://day.js.org/)
+- **18x faster** than [Day.js](https://day.js.org/)
 
 ### Parsing
 
@@ -118,10 +118,10 @@ API response.
 
 On this test, `CalendarDate` is:
 
-- Slightly (1.13x) slower than the native `Date` object
-- **4x faster** than
+- **1.25x faster** than the native `Date` object
+- **6x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **4x faster** than [Day.js](https://day.js.org/)
+- **6x faster** than [Day.js](https://day.js.org/)
 
 ### Iterate throught a year
 
@@ -130,10 +130,10 @@ year, converting each date to an ISO 8601 string.
 
 On this test, `CalendarDate` is:
 
-- **8x faster** than the native `Date` object
-- **18x faster** than
+- **9x faster** than the native `Date` object
+- **20x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **32x faster** than [Day.js](https://day.js.org/)
+- **35x faster** than [Day.js](https://day.js.org/)
 
 ## FAQ
 

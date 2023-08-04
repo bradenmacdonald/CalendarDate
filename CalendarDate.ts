@@ -86,7 +86,7 @@ class CalendarDate {
   public static fromString(str: string): CalendarDate {
     /** Helper to get an int from a substring of a string, defaulting to two digits long. */
     const extractInt = (someString: string, start: number, end?: number) =>
-      parseInt(someString.substring(start, end ?? start + 2), 10);
+      Number(someString.substring(start, end ?? start + 2));
     const year = extractInt(str, 0, 4);
     let month = NaN;
     let day = NaN;
@@ -94,11 +94,8 @@ class CalendarDate {
       // YYYY-MM-DD format, presumably:
       month = extractInt(str, 5);
       day = extractInt(str, 8);
-    } else if (
-      str.length === 8 && String(parseInt(str, 10)).padStart(8, "0") === str
-    ) {
+    } else if (str.length === 8) {
       // YYYYMMDD format, presumably.
-      // (Note we check 'String(parseInt(str, 10)).padStart(8, "0") === str' to avoid matching things like '05/05/05')
       month = extractInt(str, 4);
       day = extractInt(str, 6);
     }
