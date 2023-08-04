@@ -2,6 +2,31 @@ import { CalendarDate, D } from "./CalendarDate.ts";
 import { assertEquals } from "https://deno.land/std@0.196.0/assert/assert_equals.ts";
 import { assertThrows } from "https://deno.land/std@0.196.0/assert/assert_throws.ts";
 
+const MONTHS = Object.freeze({
+  JAN: 1,
+  FEB: 2,
+  MAR: 3,
+  APR: 4,
+  MAY: 5,
+  JUN: 6,
+  JUL: 7,
+  AUG: 8,
+  SEP: 9,
+  OCT: 10,
+  NOV: 11,
+  DEC: 12,
+});
+
+const DAYS = Object.freeze({
+  MON: 0,
+  TUE: 1,
+  WED: 2,
+  THU: 3,
+  FRI: 4,
+  SAT: 5,
+  SUN: 6,
+});
+
 /** test that the given CalendarDate seems "sane" (within expected ranges and self-consistent) */
 function assertSane(calDate: CalendarDate) {
   // Optimized version:
@@ -24,42 +49,42 @@ function assertSane(calDate: CalendarDate) {
 }
 
 Deno.test("daysInMonth()", () => {
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JAN), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.FEB), 28); // non-leap
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.MAR), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.APR), 30);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.MAY), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JUN), 30);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JUL), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.AUG), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.SEP), 30);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.OCT), 31);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.NOV), 30);
-  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.DEC), 31);
-  assertEquals(CalendarDate.daysInMonth(2020, CalendarDate.MONTHS.FEB), 29); // leap
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.JAN), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.FEB), 28); // non-leap
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.MAR), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.APR), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.MAY), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.JUN), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.JUL), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.AUG), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.SEP), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.OCT), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.NOV), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, MONTHS.DEC), 31);
+  assertEquals(CalendarDate.daysInMonth(2020, MONTHS.FEB), 29); // leap
 });
 
 Deno.test(".create()", async (t) => {
   const Y2K = 730485; // days between January 1, 2000 and January 1, year "0" (1 BCE)
   // deno-fmt-ignore
   const specificDates: {args: [y: number, m: number, d: number], str: string, value: number, dayOfWeek: number, dayOfYear: number}[] = [
-        {args: [2000, CalendarDate.MONTHS.JAN, 1], str: "2000-01-01", value: 0 + Y2K, dayOfWeek: CalendarDate.DAYS.SAT, dayOfYear: 0},
-        {args: [2000, CalendarDate.MONTHS.JAN, 31], str: "2000-01-31", value: 30 + Y2K, dayOfWeek: CalendarDate.DAYS.MON, dayOfYear: 30},
-        {args: [2000, CalendarDate.MONTHS.FEB, 1], str: "2000-02-01", value: 31 + Y2K, dayOfWeek: CalendarDate.DAYS.TUE, dayOfYear: 31},
-        {args: [2025, CalendarDate.MONTHS.NOV, 30], str: "2025-11-30", value: 9465 + Y2K, dayOfWeek: CalendarDate.DAYS.SUN, dayOfYear: 365-32},
-        {args: [2025, CalendarDate.MONTHS.DEC, 1], str: "2025-12-01", value: 9466 + Y2K, dayOfWeek: CalendarDate.DAYS.MON, dayOfYear: 365-31},
-        {args: [2789, CalendarDate.MONTHS.FEB, 28], str: "2789-02-28", value: 288235 + Y2K, dayOfWeek: CalendarDate.DAYS.TUE, dayOfYear: 58},
-        {args: [2789, CalendarDate.MONTHS.MAR, 1], str: "2789-03-01", value: 288236 + Y2K, dayOfWeek: CalendarDate.DAYS.WED, dayOfYear: 59},
-        {args: [9876, CalendarDate.MONTHS.MAY, 4], str: "9876-05-04", value: 3607259, dayOfWeek: CalendarDate.DAYS.THU, dayOfYear: 124},
-        {args: [1999, CalendarDate.MONTHS.DEC, 31], str: "1999-12-31", value: -1 + Y2K, dayOfWeek: CalendarDate.DAYS.FRI, dayOfYear: 364},
-        {args: [1997, CalendarDate.MONTHS.JAN, 1], str: "1997-01-01", value: -1095 + Y2K, dayOfWeek: CalendarDate.DAYS.WED, dayOfYear: 0},
-        {args: [1996, CalendarDate.MONTHS.DEC, 31], str: "1996-12-31", value: -1096 + Y2K, dayOfWeek: CalendarDate.DAYS.TUE, dayOfYear: 365}, // 1996 was a leap year
-        {args: [1996, CalendarDate.MONTHS.JAN, 1], str: "1996-01-01", value: -1461 + Y2K, dayOfWeek: CalendarDate.DAYS.MON, dayOfYear: 0},
-        {args: [1794, CalendarDate.MONTHS.AUG, 15], str: "1794-08-15", value: -75013 + Y2K, dayOfWeek: CalendarDate.DAYS.FRI, dayOfYear: 226},
-        {args: [1583, CalendarDate.MONTHS.JAN, 1], str: "1583-01-01", value: -152306 + Y2K, dayOfWeek: CalendarDate.DAYS.SAT, dayOfYear: 0},
-        {args: [400, CalendarDate.MONTHS.MAR, 1], str: "0400-03-01", value: 146157, dayOfWeek: CalendarDate.DAYS.WED, dayOfYear: 60},  // March 1, 400 CE in back-projected Gregorian calendar
-        {args: [123, CalendarDate.MONTHS.APR, 5], str: "0123-04-05", value: 45019, dayOfWeek: CalendarDate.DAYS.MON, dayOfYear: 94},  // April 5, 123 CE in back-projected Gregorian calendar
-        {args: [1, CalendarDate.MONTHS.JAN, 1], str: "0001-01-01", value: 366, dayOfWeek: CalendarDate.DAYS.MON, dayOfYear: 0},  // Jan 1, 1 CE in back-projected Gregorian calendar
+        {args: [2000, MONTHS.JAN, 1], str: "2000-01-01", value: 0 + Y2K, dayOfWeek: DAYS.SAT, dayOfYear: 0},
+        {args: [2000, MONTHS.JAN, 31], str: "2000-01-31", value: 30 + Y2K, dayOfWeek: DAYS.MON, dayOfYear: 30},
+        {args: [2000, MONTHS.FEB, 1], str: "2000-02-01", value: 31 + Y2K, dayOfWeek: DAYS.TUE, dayOfYear: 31},
+        {args: [2025, MONTHS.NOV, 30], str: "2025-11-30", value: 9465 + Y2K, dayOfWeek: DAYS.SUN, dayOfYear: 365-32},
+        {args: [2025, MONTHS.DEC, 1], str: "2025-12-01", value: 9466 + Y2K, dayOfWeek: DAYS.MON, dayOfYear: 365-31},
+        {args: [2789, MONTHS.FEB, 28], str: "2789-02-28", value: 288235 + Y2K, dayOfWeek: DAYS.TUE, dayOfYear: 58},
+        {args: [2789, MONTHS.MAR, 1], str: "2789-03-01", value: 288236 + Y2K, dayOfWeek: DAYS.WED, dayOfYear: 59},
+        {args: [9876, MONTHS.MAY, 4], str: "9876-05-04", value: 3607259, dayOfWeek: DAYS.THU, dayOfYear: 124},
+        {args: [1999, MONTHS.DEC, 31], str: "1999-12-31", value: -1 + Y2K, dayOfWeek: DAYS.FRI, dayOfYear: 364},
+        {args: [1997, MONTHS.JAN, 1], str: "1997-01-01", value: -1095 + Y2K, dayOfWeek: DAYS.WED, dayOfYear: 0},
+        {args: [1996, MONTHS.DEC, 31], str: "1996-12-31", value: -1096 + Y2K, dayOfWeek: DAYS.TUE, dayOfYear: 365}, // 1996 was a leap year
+        {args: [1996, MONTHS.JAN, 1], str: "1996-01-01", value: -1461 + Y2K, dayOfWeek: DAYS.MON, dayOfYear: 0},
+        {args: [1794, MONTHS.AUG, 15], str: "1794-08-15", value: -75013 + Y2K, dayOfWeek: DAYS.FRI, dayOfYear: 226},
+        {args: [1583, MONTHS.JAN, 1], str: "1583-01-01", value: -152306 + Y2K, dayOfWeek: DAYS.SAT, dayOfYear: 0},
+        {args: [400, MONTHS.MAR, 1], str: "0400-03-01", value: 146157, dayOfWeek: DAYS.WED, dayOfYear: 60},  // March 1, 400 CE in back-projected Gregorian calendar
+        {args: [123, MONTHS.APR, 5], str: "0123-04-05", value: 45019, dayOfWeek: DAYS.MON, dayOfYear: 94},  // April 5, 123 CE in back-projected Gregorian calendar
+        {args: [1, MONTHS.JAN, 1], str: "0001-01-01", value: 366, dayOfWeek: DAYS.MON, dayOfYear: 0},  // Jan 1, 1 CE in back-projected Gregorian calendar
     ];
   for (const d of specificDates) {
     await t.step(
@@ -81,7 +106,7 @@ Deno.test(".create()", async (t) => {
 
   await t.step("Can handle tricky dates", () => {
     for (let year = 1; year <= 3000; year++) {
-      const j1 = CalendarDate.create(year, CalendarDate.MONTHS.JAN, 1);
+      const j1 = CalendarDate.create(year, MONTHS.JAN, 1);
       assertEquals(
         j1.year,
         year,
@@ -89,7 +114,7 @@ Deno.test(".create()", async (t) => {
       );
       assertEquals(
         j1.month,
-        CalendarDate.MONTHS.JAN,
+        MONTHS.JAN,
         `.month for Jan 1, ${year} should yield 0.`,
       );
       assertEquals(j1.day, 1, `.day for Jan 1, ${year} should yield 1.`);
@@ -100,7 +125,7 @@ Deno.test(".create()", async (t) => {
       );
       assertSane(j1);
 
-      const d31 = CalendarDate.create(year, CalendarDate.MONTHS.DEC, 31);
+      const d31 = CalendarDate.create(year, MONTHS.DEC, 31);
       assertEquals(
         d31.year,
         year,
@@ -108,7 +133,7 @@ Deno.test(".create()", async (t) => {
       );
       assertEquals(
         d31.month,
-        CalendarDate.MONTHS.DEC,
+        MONTHS.DEC,
         `.month for Dec. 31, ${year} should yield 11.`,
       );
       assertEquals(d31.day, 31, `.day for Dec. 31, ${year} should yield 31.`);
@@ -116,11 +141,11 @@ Deno.test(".create()", async (t) => {
       assertSane(d31);
 
       if (CalendarDate.isLeapYear(year)) {
-        const f29 = CalendarDate.create(year, CalendarDate.MONTHS.FEB, 29);
+        const f29 = CalendarDate.create(year, MONTHS.FEB, 29);
         assertEquals(f29.year, year);
       } else {
-        const mar1 = CalendarDate.create(year, CalendarDate.MONTHS.MAR, 1);
-        const feb28 = CalendarDate.create(year, CalendarDate.MONTHS.FEB, 28);
+        const mar1 = CalendarDate.create(year, MONTHS.MAR, 1);
+        const feb28 = CalendarDate.create(year, MONTHS.FEB, 28);
         assertEquals(mar1.value - feb28.value, 1);
       }
     }

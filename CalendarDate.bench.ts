@@ -101,7 +101,7 @@ Deno.bench("Parse - Native Date object", { group: "parse" }, () => {
 const year = 2023;
 
 Deno.bench("Iterate through a year - CalendarDate", { group: "iterate", baseline: true }, () => {
-    let d = CalendarDate.create(year, CalendarDate.MONTHS.JAN, 1);
+    let d = CalendarDate.create(year, 1, 1);
     for (let i = 0; i < 365; i++) {
         d.toString();
         d = d.addDays(1);

@@ -1,31 +1,4 @@
-const freeze = Object.freeze;
-
-const MONTHS = freeze({
-  JAN: 1,
-  FEB: 2,
-  MAR: 3,
-  APR: 4,
-  MAY: 5,
-  JUN: 6,
-  JUL: 7,
-  AUG: 8,
-  SEP: 9,
-  OCT: 10,
-  NOV: 11,
-  DEC: 12,
-});
-
-const DAYS = freeze({
-  MON: 0,
-  TUE: 1,
-  WED: 2,
-  THU: 3,
-  FRI: 4,
-  SAT: 5,
-  SUN: 6,
-});
-
-const MONTH_SUMS_NORMAL_YEAR = freeze([
+const MONTH_SUMS_NORMAL_YEAR = Object.freeze([
   NaN, // we use 1-indexed months, so there's no entry at the zero index.
   0,
   31,
@@ -238,7 +211,7 @@ class CalendarDate {
    * @param {number} month - Month (1-12)
    */
   public static daysInMonth(year: number, month: number): number {
-    if (month === MONTHS.FEB) {
+    if (month === 2) { // Special case for February:
       return CalendarDate.isLeapYear(year) ? 29 : 28;
     }
     return optimizedDaysInMonth(month);
@@ -249,15 +222,6 @@ class CalendarDate {
    */
   public static isLeapYear(year: number): boolean {
     return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0);
-  }
-
-  // Constants
-  public static get DAYS() {
-    return DAYS;
-  }
-
-  public static get MONTHS() {
-    return MONTHS;
   }
 
   /** Get this calendar date as a regular JavaScript Date object, with UTC timezone. */
@@ -291,9 +255,9 @@ class CalendarDate {
 
   public addYears(delta: number): CalendarDate {
     const newYear = this.year + delta;
-    // Special case handling for leap years:
+    // Special case handling for February in leap years:
     if (
-      this.month === MONTHS.FEB && this.day === 29 &&
+      this.month === 2 && this.day === 29 &&
       !CalendarDate.isLeapYear(newYear)
     ) {
       return CalendarDate.create(newYear, this.month + 1, 1);
