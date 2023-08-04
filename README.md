@@ -51,7 +51,7 @@ The benefits of using `CalendarDate` are:
 Instantiation:
 
 ```typescript
-import { CalendarDate, D } from "https://deno.land/x/calendar_date_deno@v1.0.0/CalendarDate.ts";
+import { CalendarDate, D } from "https://deno.land/x/calendar_date_deno@v1.1.0/CalendarDate.ts";
 
 // You can construct CalendarDate instances using the included D literal helper:
 const someDate = D`2023-08-15`;
