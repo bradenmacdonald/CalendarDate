@@ -10,8 +10,8 @@ calendar in use at the time.
 Dates are internally represented as a single `Number` for performance and memory
 efficiency.
 
-This is a tiny single-file library with no dependencies and is under 2.9 kB when
-minified.
+This is a tiny single-file library with no dependencies and is just 1.35 kB when
+minified and gzipped.
 
 ## Why do you want this?
 
