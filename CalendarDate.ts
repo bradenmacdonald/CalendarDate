@@ -41,21 +41,11 @@ const MONTH_SUMS_NORMAL_YEAR = freeze([
   334,
 ]);
 
-const DAYS_PER_MONTH = freeze([
-  NaN, // we use 1-indexed months, so there's no entry at the zero index.
-  /* Jan */ 31,
-  NaN,
-  /* Mar */ 31,
-  /* Apr */ 30,
-  /* May */ 31,
-  /* Jun */ 30,
-  /* Jul */ 31,
-  /* Aug */ 31,
-  /* Sep */ 30,
-  /* Oct */ 31,
-  /* Nov */ 30,
-  /* Dec */ 31,
-]);
+/** Helper method. Given a month (1-12 EXCLUDING 2 for February), return how many days it has */
+function optimizedDaysInMonth(month: number): 30 | 31 {
+  // Again, this works for every month except February, using a neat bitwise trick for performance.
+  return (month & 1) === (month >> 3) ? 30 : 31;
+}
 
 /** Character code of the letter A, used for the cached strings below */
 const MONTHS_CHAR_OFFSET = "A".charCodeAt(0) - 1;
@@ -70,7 +60,7 @@ const MONTHS_CHAR_OFFSET = "A".charCodeAt(0) - 1;
 // Instead of hard-coding as seen above, we construct these in the following way to improve minification size.
 const pre = "A".repeat(31) + "B".repeat(28);
 const end = "CDEFGHIJKL".split("").map((x, i) =>
-  x.repeat(DAYS_PER_MONTH[i + 3])
+  x.repeat(optimizedDaysInMonth(i + 3))
 ).join("");
 const NORMAL_YEAR = pre + end;
 const LEAP_YEAR = pre + "B" + end;
@@ -251,7 +241,7 @@ class CalendarDate {
     if (month === MONTHS.FEB) {
       return CalendarDate.isLeapYear(year) ? 29 : 28;
     }
-    return DAYS_PER_MONTH[month] as number;
+    return optimizedDaysInMonth(month);
   }
   /**
    * Is 'year' a leap year? Can be an absolute year (e.g. 2016) or relative to the year 2000 (e.g. 16) or relative to the "year 0" (1 BCE).

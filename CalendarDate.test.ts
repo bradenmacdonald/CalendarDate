@@ -23,6 +23,22 @@ function assertSane(calDate: CalendarDate) {
   }
 }
 
+Deno.test("daysInMonth()", () => {
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JAN), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.FEB), 28); // non-leap
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.MAR), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.APR), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.MAY), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JUN), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.JUL), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.AUG), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.SEP), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.OCT), 31);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.NOV), 30);
+  assertEquals(CalendarDate.daysInMonth(2023, CalendarDate.MONTHS.DEC), 31);
+  assertEquals(CalendarDate.daysInMonth(2020, CalendarDate.MONTHS.FEB), 29); // leap
+});
+
 Deno.test(".create()", async (t) => {
   const Y2K = 730485; // days between January 1, 2000 and January 1, year "0" (1 BCE)
   // deno-fmt-ignore
