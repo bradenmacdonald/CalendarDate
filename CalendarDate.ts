@@ -41,22 +41,6 @@ const MONTH_SUMS_NORMAL_YEAR = freeze([
   334,
 ]);
 
-const MONTH_SUMS_LEAP_YEAR = freeze([
-  NaN, // we use 1-indexed months, so there's no entry at the zero index.
-  0,
-  31,
-  60,
-  91,
-  121,
-  152,
-  182,
-  213,
-  244,
-  274,
-  305,
-  335,
-]);
-
 const DAYS_PER_MONTH = freeze([
   NaN, // we use 1-indexed months, so there's no entry at the zero index.
   /* Jan */ 31,
@@ -107,9 +91,10 @@ function tripletToDaysValue(year: number, month: number, day: number): number {
   let daysValue = (year * 365) + ((year + 3) / 4 | 0) -
     ((year + 99) / 100 | 0) + ((year + 399) / 400 | 0);
   // Compute the number of days between the first day of the year and the first day of the month:
-  daysValue += CalendarDate.isLeapYear(year)
-    ? MONTH_SUMS_LEAP_YEAR[month]
-    : MONTH_SUMS_NORMAL_YEAR[month];
+  daysValue += MONTH_SUMS_NORMAL_YEAR[month];
+  if (CalendarDate.isLeapYear(year) && month > 2) {
+    daysValue += 1;
+  }
   daysValue += day - 1;
   return daysValue;
 }
