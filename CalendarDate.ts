@@ -1,3 +1,4 @@
+/** Array that represents the cumulative number of days in a non-leap year up to the start of a given month */
 const MONTH_SUMS_NORMAL_YEAR = Object.freeze([
   NaN, // we use 1-indexed months, so there's no entry at the zero index.
   0,
@@ -14,11 +15,16 @@ const MONTH_SUMS_NORMAL_YEAR = Object.freeze([
   334,
 ]);
 
-/** Helper method. Given a month (1-12 EXCLUDING 2 for February), return how many days it has */
-function optimizedDaysInMonth(month: number): 30 | 31 {
-  // Again, this works for every month except February, using a neat bitwise trick for performance.
-  return (month & 1) === (month >> 3) ? 30 : 31;
-}
+/**
+ * Helper method. Given a month (1-12 EXCLUDING 2 for February), return how many days it has.
+ * It uses a neat bitwise trick for performance. Again, this works for every month except February.
+ */
+const optimizedDaysInMonth = (month: number): 30 | 31 =>
+  (month & 1) === (month >> 3) ? 30 : 31;
+
+/** Helper to get an int from a substring of a string, defaulting to two digits long. */
+const extractInt = (someString: string, start: number, len = 2) =>
+  Number(someString.substring(start, start + len));
 
 /** Character code of the letter A, used for the cached strings below */
 const MONTHS_CHAR_OFFSET = "A".charCodeAt(0) - 1;
@@ -47,7 +53,11 @@ const LEAP_YEAR = pre + "B" + end;
  * @param {number} month - Month (1 for January, 12 for December)
  * @param {number} day - Day (1-31)
  */
-function tripletToDaysValue(year: number, month: number, day: number): number {
+const tripletToDaysValue = (
+  year: number,
+  month: number,
+  day: number,
+): number => {
   if (day <= 0 || day > CalendarDate.daysInMonth(year, month)) { // daysInMonth verifies the year/month range.
     throw new Error(`Day out of range.`);
   }
@@ -60,7 +70,7 @@ function tripletToDaysValue(year: number, month: number, day: number): number {
   }
   daysValue += day - 1;
   return daysValue;
-}
+};
 
 /**
  * A calendar date, using the Gregorian calendar. Does not have any time component.
@@ -84,9 +94,6 @@ class CalendarDate {
    * @param {string} str - An ISO 8601 date string
    */
   public static fromString(str: string): CalendarDate {
-    /** Helper to get an int from a substring of a string, defaulting to two digits long. */
-    const extractInt = (someString: string, start: number, end?: number) =>
-      Number(someString.substring(start, end ?? start + 2));
     const year = extractInt(str, 0, 4);
     let month = NaN;
     let day = NaN;
@@ -180,11 +187,12 @@ class CalendarDate {
    * Get the date as an ISO 8601 string (e.g. "2015-01-25")
    */
   public toString(): string {
-    const year = this.year;
-    const month = this.month;
-    const day = this.day;
-    return String(year).padStart(4, "0") + (month < 10 ? "-0" : "-") + month +
-      (day < 10 ? "-0" : "-") + day;
+    const month = this.month, day = this.day;
+    return (
+      String(this.year).padStart(4, "0") +
+      (month < 10 ? "-0" : "-") + month +
+      (day < 10 ? "-0" : "-") + day
+    );
   }
 
   /**
