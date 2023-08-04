@@ -161,7 +161,7 @@ class CalendarDate {
     // Compute the number of days between January 1, year 0 and the first day of the given year:
     const d = (year * 365) + ((year + 3) / 4 | 0) - ((year + 99) / 100 | 0) +
       ((year + 399) / 400 | 0);
-    if (CalendarDate.isLeapYear(year)) { // Note: isLeapYear() works with an absolute year ('2015') or relative to 1200 ('15')
+    if (CalendarDate.isLeapYear(year)) {
       return LEAP_YEAR.charCodeAt(this.#value - d) - MONTHS_CHAR_OFFSET;
     } else {
       return NORMAL_YEAR.charCodeAt(this.#value - d) - MONTHS_CHAR_OFFSET;
@@ -223,8 +223,8 @@ class CalendarDate {
   }
 
   /**
-   * Is 'year' a leap year? Can be an absolute year (e.g. 2016) or relative to the year 2000 (e.g. 16) or relative to the "year 0" (1 BCE).
-   * @param {number} year - The year in question
+   * Is 'year' a leap year?
+   * @param {number} year - The year in question, e.g. 2000
    */
   public static isLeapYear(year: number): boolean {
     return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0);
