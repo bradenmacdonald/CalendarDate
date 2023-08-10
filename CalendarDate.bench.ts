@@ -2,6 +2,14 @@
 import { CalendarDate } from "./CalendarDate.ts";
 import { CalendarDate as NpmCalendarDate } from "npm:calendar-date";
 import dayjs from "npm:dayjs";
+import { Temporal as TemporalPollyfill } from 'npm:@js-temporal/polyfill';
+
+declare const Temporal: typeof TemporalPollyfill;
+
+if (typeof Temporal === "undefined") {
+    // The new Temporal API is behind a V8 feature flag.
+    throw new Error(`Run this using: deno bench --v8-flags=--harmony-temporal`);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +55,22 @@ Deno.bench("Combined features - Native Date object (alt add day method)", { grou
     if (d1.toISOString().substring(0, 10) !== initialDateStr) throw new Error("toString() failed.");
     if (d2.toISOString().substring(0, 10) !== plusOneDateStr) throw new Error("Adding a day failed.");
     if (d2 <= d1) throw new Error("Comparison test failed.");
+});
+
+Deno.bench("Combined features - Native Temporal.PlainDate object", { group: "combined" }, () => {
+    const d1 = Temporal.PlainDate.from(initialDateStr);
+    const d2 = d1.add({days: 1});
+    if (d1.toString() !== initialDateStr) throw new Error("toString() failed.");
+    if (d2.toString() !== plusOneDateStr) throw new Error("Adding a day failed.");
+    if (Temporal.PlainDate.compare(d1, d2) !== -1) throw new Error("Comparison test failed.");
+});
+
+Deno.bench("Combined features - Pollyfilled Temporal.PlainDate object", { group: "combined" }, () => {
+    const d1 = TemporalPollyfill.PlainDate.from(initialDateStr);
+    const d2 = d1.add({days: 1});
+    if (d1.toString() !== initialDateStr) throw new Error("toString() failed.");
+    if (d2.toString() !== plusOneDateStr) throw new Error("Adding a day failed.");
+    if (TemporalPollyfill.PlainDate.compare(d1, d2) !== -1) throw new Error("Comparison test failed.");
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +119,18 @@ Deno.bench("Parse - Native Date object", { group: "parse" }, () => {
     }
 });
 
+Deno.bench("Parse - Native Temporal.PlainDate object", { group: "parse" }, () => {
+    for (const str of stringsToParse) {
+        Temporal.PlainDate.from(str);
+    }
+});
+
+Deno.bench("Parse - Pollyfilled Temporal.PlainDate object", { group: "parse" }, () => {
+    for (const str of stringsToParse) {
+        TemporalPollyfill.PlainDate.from(str);
+    }
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -127,13 +163,31 @@ Deno.bench("Iterate through a year - Day.js", { group: "iterate" }, () => {
     if (d.toISOString().substring(0, 10) !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
 });
 
-Deno.bench("Iterate through a year - native JS date", { group: "iterate" }, () => {
+Deno.bench("Iterate through a year - native JS Date object", { group: "iterate" }, () => {
     const d = new Date(Date.UTC(year, 0, 1));
     for (let i = 0; i < 365; i++) {
         d.toISOString().substring(0, 10);
         d.setUTCDate(d.getUTCDate() + 1);
     }
     if (d.toISOString().substring(0, 10) !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
+});
+
+Deno.bench("Iterate through a year - native Temporal.PlainDate object", { group: "iterate" }, () => {
+    let d = new Temporal.PlainDate(year, 1, 1);
+    for (let i = 0; i < 365; i++) {
+        d.toString();
+        d = d.add({days: 1});
+    }
+    if (d.toString() !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
+});
+
+Deno.bench("Iterate through a year - Pollyfilled Temporal.PlainDate object", { group: "iterate" }, () => {
+    let d = new TemporalPollyfill.PlainDate(year, 1, 1);
+    for (let i = 0; i < 365; i++) {
+        d.toString();
+        d = d.add({days: 1});
+    }
+    if (d.toString() !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
 });
 
 ////////////////////////////////////////////////////////////////////////////////

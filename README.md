@@ -3,15 +3,15 @@
 ## What is it?
 
 A JavaScript calendar date class, that can represent any calendar date from
-January 1, 1 CE to December 31, 9999. For dates prior to October 1582, it
-assumes a "back-projected" Gregorian calendar, as if that were always the
-calendar in use at the time.
-
-Dates are internally represented as a single `Number` for performance and memory
-efficiency.
+January 1, 1 CE to December 31, 9999. Dates are internally represented as a
+single `Number` for very high performance and memory efficiency.
 
 This is a tiny single-file library with no dependencies and is just 1.35 kB when
-minified and gzipped.
+minified and gzipped. It's also by far the most performant implementation I know
+of (see benchmarks).
+
+For dates prior to October 1582, it assumes a back-projected ("proleptic")
+Gregorian calendar, as if that were always the calendar in use at the time.
 
 ## Why do you want this?
 
@@ -34,6 +34,12 @@ using UTC, but is formatted using local time. Likewise, in some timezones you
 can see `new Date(2021, 2, 1).toISOString().substring(0,10)` (March 1) will be
 printed as `"2021-02-28"` (Feb 28) through the opposite problem - the date is
 constructed using local time but printed using UTC.
+
+There is going to be a new
+[`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html) in
+future versions of JavaScript which will solve all of these problems, but it is
+not yet fully implemented in major runtimes like V8. For now, you need to use a
+pollyfill or something like this `CalendarDate` class.
 
 The benefits of using `CalendarDate` are:
 
@@ -110,6 +116,12 @@ On this test, `CalendarDate` is:
 - **8x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
 - **18x faster** than [Day.js](https://day.js.org/)
+- **9x faster** than the native
+  [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
+  object.
+- **25x faster** than the
+  [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
+  `Temporal.PlainDate` object.
 
 ### Parsing
 
@@ -122,6 +134,12 @@ On this test, `CalendarDate` is:
 - **6x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
 - **6x faster** than [Day.js](https://day.js.org/)
+- **4x faster** than the native
+  [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
+  object.
+- **13x faster** than the
+  [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
+  `Temporal.PlainDate` object.
 
 ### Iterate throught a year
 
@@ -134,6 +152,12 @@ On this test, `CalendarDate` is:
 - **20x faster** than
   [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
 - **35x faster** than [Day.js](https://day.js.org/)
+- **18x faster** than the native
+  [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
+  object.
+- **52x faster** than the
+  [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
+  `Temporal.PlainDate` object.
 
 ## FAQ
 
