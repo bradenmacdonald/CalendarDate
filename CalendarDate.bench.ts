@@ -3,6 +3,7 @@ import { CalendarDate } from "./CalendarDate.ts";
 import { CalendarDate as NpmCalendarDate } from "npm:calendar-date";
 import dayjs from "npm:dayjs";
 import { Temporal as TemporalPollyfill } from 'npm:@js-temporal/polyfill';
+import { Temporal as TemporalPollyfill2 } from 'npm:temporal-polyfill@0.1.1/impl';
 
 declare const Temporal: typeof TemporalPollyfill;
 
@@ -73,6 +74,14 @@ Deno.bench("Combined features - Pollyfilled Temporal.PlainDate object", { group:
     if (TemporalPollyfill.PlainDate.compare(d1, d2) !== -1) throw new Error("Comparison test failed.");
 });
 
+Deno.bench("Combined features - Pollyfilled Temporal.PlainDate object (alt)", { group: "combined" }, () => {
+    const d1 = TemporalPollyfill2.PlainDate.from(initialDateStr);
+    const d2 = d1.add({days: 1});
+    if (d1.toString() !== initialDateStr) throw new Error("toString() failed.");
+    if (d2.toString() !== plusOneDateStr) throw new Error("Adding a day failed.");
+    if (TemporalPollyfill2.PlainDate.compare(d1, d2) !== -1) throw new Error("Comparison test failed.");
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -131,6 +140,12 @@ Deno.bench("Parse - Pollyfilled Temporal.PlainDate object", { group: "parse" }, 
     }
 });
 
+Deno.bench("Parse - Pollyfilled Temporal.PlainDate object (alt)", { group: "parse" }, () => {
+    for (const str of stringsToParse) {
+        TemporalPollyfill2.PlainDate.from(str);
+    }
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -183,6 +198,15 @@ Deno.bench("Iterate through a year - native Temporal.PlainDate object", { group:
 
 Deno.bench("Iterate through a year - Pollyfilled Temporal.PlainDate object", { group: "iterate" }, () => {
     let d = new TemporalPollyfill.PlainDate(year, 1, 1);
+    for (let i = 0; i < 365; i++) {
+        d.toString();
+        d = d.add({days: 1});
+    }
+    if (d.toString() !== "2024-01-01") throw new Error(`Invalid end date, got ${d.toString()}`);
+});
+
+Deno.bench("Iterate through a year - Pollyfilled Temporal.PlainDate object (alt)", { group: "iterate" }, () => {
+    let d = new TemporalPollyfill2.PlainDate(year, 1, 1);
     for (let i = 0; i < 365; i++) {
         d.toString();
         d = d.add({days: 1});

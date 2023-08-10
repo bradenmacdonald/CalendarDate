@@ -15,7 +15,8 @@
     "specifiers": {
       "@js-temporal/polyfill": "@js-temporal/polyfill@0.4.4",
       "calendar-date": "calendar-date@2.2.0",
-      "dayjs": "dayjs@1.11.9"
+      "dayjs": "dayjs@1.11.9",
+      "temporal-polyfill@0.1.1": "temporal-polyfill@0.1.1"
     },
     "packages": {
       "@js-temporal/polyfill@0.4.4": {
@@ -35,6 +36,16 @@
       },
       "jsbi@4.3.0": {
         "integrity": "sha512-SnZNcinB4RIcnEyZqFPdGPVgrg2AcnykiBy0sHVJQKHYeaLUvi3Exj+iaPpLnFVkDPZIV4U0yvgC9/R4uEAZ9g==",
+        "dependencies": {}
+      },
+      "temporal-polyfill@0.1.1": {
+        "integrity": "sha512-/5e4EVRA0wBI/bEhWLirSjwUg1lELhQyTXxw9zNbVhqjKvI9BLczs+3wtsoD9sn3HN2ImAMW5XJQwAiXgWT+GA==",
+        "dependencies": {
+          "temporal-spec": "temporal-spec@0.1.0"
+        }
+      },
+      "temporal-spec@0.1.0": {
+        "integrity": "sha512-sMNggMeS6trCgMQuudgFHhX1gtBK3e+AT1zGrMsFYG1wlqtRT5E9rcvm3I1iNlvHpJX/3DO6L4qtWAuEl/T04Q==",
         "dependencies": {}
       },
       "tslib@2.6.1": {
