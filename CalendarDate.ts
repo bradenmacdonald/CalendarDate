@@ -47,7 +47,7 @@ const LEAP_YEAR = pre + "B" + end;
 /**
  * Internal helper method.
  * Given a year, month, and day triplet, return
- * the number of days between January 1, year "0" (-1 BCE) and the given date.
+ * the number of days between January 1, year "0" (1 BCE) and the given date.
  *
  * @param {number} year - Year (e.g. 2012)
  * @param {number} month - Month (1 for January, 12 for December)
@@ -133,7 +133,7 @@ class CalendarDate {
   constructor(daysValue: number) {
     if (
       daysValue < 366 || // 366 represents January 1, in the year 1 CE
-      daysValue > 3652424 // 1096100 is Dec. 31, 9999
+      daysValue > 3652424 // 3652424 is Dec. 31, 9999
     ) {
       throw new Error(`Date value (${daysValue}) out of range.`);
     } else if (!Number.isInteger(daysValue)) {
