@@ -35,11 +35,14 @@ can see `new Date(2021, 2, 1).toISOString().substring(0,10)` (March 1) will be
 printed as `"2021-02-28"` (Feb 28) through the opposite problem - the date is
 constructed using local time but printed using UTC.
 
-There is going to be a new
-[`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html) in
-future versions of JavaScript which will solve all of these problems, but it is
-not yet fully implemented in major runtimes like V8. For now, you need to use a
-pollyfill or something like this `CalendarDate` class.
+🌟 There is going to be a new
+[**`Temporal.PlainDate`**](https://tc39.es/proposal-temporal/docs/plaindate.html)
+in future versions of JavaScript which will solve all of these problems, but it
+is not yet fully implemented in major runtimes like V8. For now, you need to use
+a pollyfill or something like this `CalendarDate` class. If performance, memory
+use, or code size are a concern, I'd recommend this `CalendarDate`
+implementation; otherwise, use a `Temporal.PlainDate` polyfill to be more
+future-compatible.
 
 The benefits of using `CalendarDate` are:
 
@@ -48,8 +51,8 @@ The benefits of using `CalendarDate` are:
 - It lets you avoid all kinds of subtle bugs related to timezones and daylight
   savings time (this is the voice of experience talking!).
 - This implementation is very optimized and is typically 6-9x faster than using
-  the native `Date` class. It represents each date as a single `Number` so it is
-  also very memory efficient.
+  the native `Date` or `Temporal.PlainDate` classes. It represents each date as
+  a single `Number` so it is also very memory efficient.
 - Unlike `Date`, it is immutable, which makes your code more predictable.
 
 ## Usage by example
@@ -113,12 +116,12 @@ format.
 On this test, `CalendarDate` is:
 
 - **6x faster** than the native `Date` object
-- **8x faster** than
-  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **18x faster** than [Day.js](https://day.js.org/)
 - **9x faster** than the native
   [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
   object.
+- **8x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **18x faster** than [Day.js](https://day.js.org/)
 - **25x faster** than the
   [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
   `Temporal.PlainDate` object.
@@ -131,12 +134,12 @@ API response.
 On this test, `CalendarDate` is:
 
 - **1.25x faster** than the native `Date` object
-- **6x faster** than
-  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **6x faster** than [Day.js](https://day.js.org/)
 - **4x faster** than the native
   [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
   object.
+- **6x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **6x faster** than [Day.js](https://day.js.org/)
 - **13x faster** than the
   [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
   `Temporal.PlainDate` object.
@@ -149,12 +152,12 @@ year, converting each date to an ISO 8601 string.
 On this test, `CalendarDate` is:
 
 - **9x faster** than the native `Date` object
-- **20x faster** than
-  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
-- **35x faster** than [Day.js](https://day.js.org/)
 - **18x faster** than the native
   [`Temporal.PlainDate`](https://tc39.es/proposal-temporal/docs/plaindate.html)
   object.
+- **20x faster** than
+  [`calendar-date` on NPM](https://www.npmjs.com/package/calendar-date)
+- **35x faster** than [Day.js](https://day.js.org/)
 - **52x faster** than the
   [pollyfilled](https://www.npmjs.com/package/@js-temporal/polyfill)
   `Temporal.PlainDate` object.
