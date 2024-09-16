@@ -35,14 +35,13 @@ can see `new Date(2021, 2, 1).toISOString().substring(0,10)` (March 1) will be
 printed as `"2021-02-28"` (Feb 28) through the opposite problem - the date is
 constructed using local time but printed using UTC.
 
-🌟 There is going to be a new
+🌟 There is a new
 [**`Temporal.PlainDate`**](https://tc39.es/proposal-temporal/docs/plaindate.html)
-in future versions of JavaScript which will solve all of these problems, but it
-is not yet fully implemented in major runtimes like V8. For now, you need to use
-a pollyfill or something like this `CalendarDate` class. If performance, memory
-use, or code size are a concern, I'd recommend this `CalendarDate`
-implementation; otherwise, use a `Temporal.PlainDate` polyfill to be more
-future-compatible.
+API in JavaScript which solves all of these problems, but it is not yet fully
+implemented in all major runtimes/browsers. What's more, it's slower than this
+`CalendarDate` class. So if performance, memory use, or code size are a concern,
+I'd recommend this `CalendarDate` implementation; otherwise, use a
+`Temporal.PlainDate` polyfill to be more future-compatible.
 
 The benefits of using `CalendarDate` are:
 
@@ -105,7 +104,7 @@ It's very readable.
 
 See the included [`CalendarDate.bench.ts`](CalendarDate.bench.ts) file for
 details. You can run these benchmarks using
-[`deno bench`](https://deno.land/manual/tools/benchmarker).
+[`deno bench --unstable-temporal`](https://deno.land/manual/tools/benchmarker).
 
 ### Combined features
 
