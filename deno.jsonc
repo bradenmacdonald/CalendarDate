@@ -1,2 +1,5 @@
 {
+  "name": "@bradenmacdonald/calendar-date",
+  "version": "1.2.0",
+  "exports": "./CalendarDate.ts"
 }

@@ -1,9 +1,9 @@
 // deno-fmt-ignore-file
 import { CalendarDate } from "./CalendarDate.ts";
-import { CalendarDate as NpmCalendarDate } from "npm:calendar-date";
-import dayjs from "npm:dayjs";
-import { Temporal as TemporalPollyfill } from 'npm:@js-temporal/polyfill';
-import { Temporal as TemporalPollyfill2 } from 'npm:temporal-polyfill@0.1.1/impl';
+import { CalendarDate as NpmCalendarDate } from "npm:calendar-date@2.6.2";
+import dayjs from "npm:dayjs@1.11.13";
+import { Temporal as TemporalPollyfill } from 'npm:@js-temporal/polyfill@0.4.4';
+import { Temporal as TemporalPollyfill2 } from 'npm:temporal-polyfill@0.2.5/impl';
 
 declare const Temporal: typeof TemporalPollyfill;
 

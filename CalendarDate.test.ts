@@ -1,6 +1,5 @@
 import { CalendarDate, D } from "./CalendarDate.ts";
-import { assertEquals } from "https://deno.land/std@0.196.0/assert/assert_equals.ts";
-import { assertThrows } from "https://deno.land/std@0.196.0/assert/assert_throws.ts";
+import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.5";
 
 const MONTHS = Object.freeze({
   JAN: 1,

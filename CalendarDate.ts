@@ -89,7 +89,7 @@ class CalendarDate {
     return new CalendarDate(tripletToDaysValue(year, month, day));
   }
 
-  public static fromPlainDate(pd: Temporal.PlainDate) {
+  public static fromPlainDate(pd: Temporal.PlainDate): CalendarDate {
     return new CalendarDate(tripletToDaysValue(pd.year, pd.month, pd.day));
   }
 
@@ -321,7 +321,7 @@ class CalendarDate {
   }
 
   // Pretty print in Deno
-  [Symbol.for("Deno.customInspect")]() {
+  [Symbol.for("Deno.customInspect")](): string {
     return `CalendarDate {${this.toString()}}`;
   }
 }

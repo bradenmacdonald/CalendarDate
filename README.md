@@ -1,5 +1,8 @@
 # Calendar Date Type for JavaScript/TypeScript
 
+[![JSR Version](https://jsr.io/badges/@bradenmacdonald/calendar-date)](https://jsr.io/@bradenmacdonald/calendar-date)
+[![JSR Score](https://jsr.io/badges/@bradenmacdonald/calendar-date/score)](https://jsr.io/@bradenmacdonald/calendar-date/score)
+
 ## What is it?
 
 A JavaScript calendar date class, that can represent any calendar date from
@@ -59,7 +62,7 @@ The benefits of using `CalendarDate` are:
 Instantiation:
 
 ```typescript
-import { CalendarDate, D } from "https://deno.land/x/calendar_date_deno@v1.1.0/CalendarDate.ts";
+import { CalendarDate, D } from "@bradenmacdonald/calendar-date";
 
 // You can construct CalendarDate instances using the included D literal helper:
 const someDate = D`2023-08-15`;
