@@ -89,6 +89,10 @@ class CalendarDate {
     return new CalendarDate(tripletToDaysValue(year, month, day));
   }
 
+  public static fromPlainDate(pd: Temporal.PlainDate) {
+    return new CalendarDate(tripletToDaysValue(pd.year, pd.month, pd.day));
+  }
+
   /**
    * Construct a CalendarDate from an ISO 8601 date string "YYYY-MM-DD" or "YYYYMMDD"
    * @param {string} str - An ISO 8601 date string
@@ -233,6 +237,10 @@ class CalendarDate {
   /** Get this calendar date as a regular JavaScript Date object, with UTC timezone. */
   public toDate(): Date {
     return new Date(this.toEpochMs());
+  }
+
+  public toPlainDate(): Temporal.PlainDate {
+    return new Temporal.PlainDate(this.year, this.month, this.day);
   }
 
   /** Get the number of milliseconds since the Unix epoch (Jan 1, 1970 UTC) */

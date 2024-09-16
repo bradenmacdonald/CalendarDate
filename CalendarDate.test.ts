@@ -366,6 +366,45 @@ Deno.test("toDate()", async (t) => {
   }
 });
 
+Deno.test({
+  name: "toPlainDate() and fromPlainDate()",
+  ignore: typeof Temporal === "undefined",
+  fn: async (t) => {
+    for (
+      const dateStr of [
+        "2000-01-01",
+        "2000-01-31",
+        "2000-02-01",
+        "2025-11-30",
+        "2025-12-01",
+        "2789-02-28",
+        "2789-03-01",
+        "1999-12-31",
+        "1997-01-01",
+        "1996-12-31",
+        "1996-01-01",
+        "1794-08-15",
+        "1583-01-01",
+        "0400-03-01",
+        "0123-04-05",
+        "0001-01-01",
+      ]
+    ) {
+      await t.step(dateStr, () => {
+        assertEquals(
+          CalendarDate.fromString(dateStr).toPlainDate().toString(),
+          dateStr,
+        );
+        assertEquals(
+          CalendarDate.fromPlainDate(Temporal.PlainDate.from(dateStr))
+            .toString(),
+          dateStr,
+        );
+      });
+    }
+  },
+});
+
 Deno.test("fromDate()", async (t) => {
   for (
     const dateStr of [
