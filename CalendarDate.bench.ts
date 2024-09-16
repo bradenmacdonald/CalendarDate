@@ -9,7 +9,7 @@ declare const Temporal: typeof TemporalPollyfill;
 
 if (typeof Temporal === "undefined") {
     // The new Temporal API is behind a V8 feature flag.
-    throw new Error(`Run this using: deno bench --v8-flags=--harmony-temporal`);
+    throw new Error(`Run this using: deno bench --unstable-temporal`);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

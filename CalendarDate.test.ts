@@ -475,9 +475,10 @@ Deno.test("formatting dates", () => {
   assertEquals(D`1969-07-20`.format(mediumEn), "Jul 20, 1969");
   assertEquals(D`0853-06-12`.format(mediumEn), "Jun 12, 853");
   // Medium Russian:
-  assertEquals(D`2023-08-01`.format(mediumRu), "1 авг. 2023 г.");
-  assertEquals(D`1969-07-20`.format(mediumRu), "20 июл. 1969 г.");
-  assertEquals(D`0853-06-12`.format(mediumRu), "12 июн. 853 г.");
+  // Note: \u202f is "Narrow No-Break Space"
+  assertEquals(D`2023-08-01`.format(mediumRu), "1 авг. 2023\u202fг.");
+  assertEquals(D`1969-07-20`.format(mediumRu), "20 июл. 1969\u202fг.");
+  assertEquals(D`0853-06-12`.format(mediumRu), "12 июн. 853\u202fг.");
   // Full English:
   assertEquals(D`2023-08-01`.format(fullEn), "Tuesday, August 1, 2023");
   assertEquals(D`1969-07-20`.format(fullEn), "Sunday, July 20, 1969");
