@@ -62,13 +62,11 @@ const tripletToDaysValue = (
     throw new Error(`Day out of range.`);
   }
   let daysValue = (year * 365) + ((year + 3) / 4 | 0) -
-    ((year + 99) / 100 | 0) + ((year + 399) / 400 | 0);
-  // Compute the number of days between the first day of the year and the first day of the month:
-  daysValue += MONTH_SUMS_NORMAL_YEAR[month];
+    ((year + 99) / 100 | 0) + ((year + 399) / 400 | 0)
+    + MONTH_SUMS_NORMAL_YEAR[month] + day - 1;
   if (CalendarDate.isLeapYear(year) && month > 2) {
-    daysValue += 1;
+    daysValue++;
   }
-  daysValue += day - 1;
   return daysValue;
 };
 
