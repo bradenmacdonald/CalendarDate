@@ -49,16 +49,16 @@ const LEAP_YEAR = pre + "B" + end;
  * Given a year, month, and day triplet, return
  * the number of days between January 1, year "0" (1 BCE) and the given date.
  *
- * @param {number} year - Year (e.g. 2012)
- * @param {number} month - Month (1 for January, 12 for December)
- * @param {number} day - Day (1-31)
+ * @param year Year (e.g. 2012)
+ * @param month Month (1 for January, 12 for December)
+ * @param day Day (1-31)
  */
 const tripletToDaysValue = (
   year: number,
   month: number,
   day: number,
 ): number => {
-  if (day <= 0 || day > CalendarDate.daysInMonth(year, month)) { // daysInMonth verifies the year/month range.
+  if (day <= 0 || day > CalendarDate.daysInMonth(year, month)) {
     throw new Error(`Day out of range.`);
   }
   let daysValue = (year * 365) + ((year + 3) / 4 | 0) -
@@ -79,9 +79,9 @@ class CalendarDate {
 
   /**
    * Construct a CalendarDate from a triple of year (1-9999), month (1-12), day (1-31)
-   * @param {number} year - Year (e.g. 2012)
-   * @param {number} month - Month (1 for January, 12 for December)
-   * @param {number} day - Day (1-31)
+   * @param year Year (e.g. 2012)
+   * @param month Month (1 for January, 12 for December)
+   * @param day Day (1-31)
    */
   public static create(year: number, month: number, day: number): CalendarDate {
     return new CalendarDate(tripletToDaysValue(year, month, day));
@@ -93,7 +93,7 @@ class CalendarDate {
 
   /**
    * Construct a CalendarDate from an ISO 8601 date string "YYYY-MM-DD" or "YYYYMMDD"
-   * @param {string} str - An ISO 8601 date string
+   * @param str An ISO 8601 date string
    */
   public static fromString(str: string): CalendarDate {
     const year = extractInt(str, 0, 4);
@@ -130,7 +130,7 @@ class CalendarDate {
 
   /**
    * Construct a CalendarDate instance using its internal int representation (# of days since the millenium)
-   * @param {Number} daysValue - how many days since the dawn of the year "0" (1 BCE)
+   * @param daysValue how many days since the dawn of the year "0" (1 BCE)
    */
   constructor(daysValue: number) {
     if (
@@ -214,8 +214,8 @@ class CalendarDate {
 
   /**
    * Helper method: how many days are in the specified month of the specified year?
-   * @param {number} year - Year
-   * @param {number} month - Month (1-12)
+   * @param year Year
+   * @param month Month (1-12)
    */
   public static daysInMonth(year: number, month: number): number {
     if (month === 2) { // Special case for February:
@@ -226,7 +226,7 @@ class CalendarDate {
 
   /**
    * Is 'year' a leap year?
-   * @param {number} year - The year in question, e.g. 2000
+   * @param year The year in question, e.g. 2000
    */
   public static isLeapYear(year: number): boolean {
     return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0);
@@ -328,8 +328,8 @@ class CalendarDate {
  * Parse a template string literal as an ISO 8601 calendar date.
  * e.g. const date = D`2016-01-01`;
  *
- * @param {Object} strings Well-formed template call site object
- * @param {...*} keys - substitution values
+ * @param strings Well-formed template call site object
+ * @param keys substitution values
  */
 const D = (
   strings: TemplateStringsArray,
